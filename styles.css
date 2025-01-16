@@ -27,7 +27,6 @@
         flex-direction: column;
         align-items: center;
     }
-
   
     .hamburger {
         display: none;
@@ -68,7 +67,7 @@
     }
 
     footer {
-        position: absolute;
+        position: relative;
         top: 95%;
         left: 90%;
         color: rgba(255,113,0,1);
@@ -78,6 +77,29 @@
         color: #FFD700;
     }
 
+    .short-term-goals {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        margin-top: 20px;
+        list-style-type: none;
+        box-shadow: 0 3px 5px rgba(255,113,0,0.5);
+        padding: 20px;
+    }
+
+    .long-term-goals {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        margin-top: 20px;
+        list-style-type: none;
+        padding: 20px;
+        box-shadow: 0 3px 5px rgba(255,113,0,0.5);
+    }
+
+    .intro-message {
+        text-align: center;
+    }
     /* Responsive Design */
     @media (max-width: 768px) {
         .hamburger {
