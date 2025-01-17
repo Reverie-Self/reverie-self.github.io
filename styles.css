@@ -77,6 +77,15 @@
         color: #FFD700;
     }
 
+    .daily-goals {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        margin-top: 20px;
+        list-style-type: none;
+        box-shadow: 0 3px 5px rgba(255,113,0,0.5);
+        padding: 20px;
+    }
     .short-term-goals {
         display: flex;
         flex-direction: column;

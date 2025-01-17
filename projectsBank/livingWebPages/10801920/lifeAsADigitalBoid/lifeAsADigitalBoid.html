@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        body {
+            margin: 0;
+            overflow: hidden;
+            background-image: url("/artBank/wallPapers/10801920/digitalBoid.png");
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            font-size: x-large;
+            text-align: center;
+        }
+        canvas {
+            display: block;
+            position: absolute;
+            top: 20%;
+            left: 10%;
+            border: 3px solid #ACACAC;
+        }
+        audio {
+            position: absolute;
+            top: 47%;
+            left: 35%;
+            width: 30%;
+        }
+        P{
+            width: 80vw;
+        }
+        button {
+            position: absolute;
+            top: 0%;
+            left: 80%;
+            width: 10%;
+            height: 5%;
+            font-size: 1em;
+            background-color: #ACACAC;
+            border: 1px solid black;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <h1>Life As a Boid</h1>
+
+    <p>
+        Imagine watching a mesmerizing boid animation, where flocks of birds 
+        move in perfect harmony, responding to invisible forces and one another 
+        in a delicate balance. As you watch, let the rhythm of an accompanying 
+        song guide your thoughts, connecting the fluid movements of the boids to 
+        the beat of life itself. In their synchronized chaos, see reflections 
+        of your own experiences—moments of connection, instinct, and 
+        adaptation. Take a moment to observe, listen, and explore: how is life 
+        as a boid not so different from your own?
+    </p>
+
+    <audio controls>
+        <source src="/musicBank/singularityHues/Life as a Digital Boid.mp3" type="audio/mpeg">
+        Your browser does not support the audio element.
+    </audio>
+
+    <canvas id="boidsCanvas"></canvas>
+
+    <button onclick="window.location.href='/projectsBank/projectDirectory.html';">Back to Projects</button>
+
+    <script>
+        const canvas = document.getElementById('boidsCanvas');
+        const ctx = canvas.getContext('2d');
+
+        canvas.width = window.innerWidth * .8;
+        canvas.height = window.innerHeight / 4;
+
+        class Boid {
+            constructor(x, y) {
+                this.position = { x, y };
+                this.velocity = { 
+                    x: Math.random() * 2 - 1, 
+                    y: Math.random() * 2 - 1
+                };
+                this.acceleration = { x: 0, y: 0 };
+                this.maxSpeed = 4;
+                this.maxForce = 0.1;
+            }
+
+            update() {
+                this.velocity.x += this.acceleration.x;
+                this.velocity.y += this.acceleration.y;
+
+                const speed = Math.sqrt(this.velocity.x ** 2 + this.velocity.y ** 2);
+                if (speed > this.maxSpeed) {
+                    this.velocity.x = (this.velocity.x / speed) * this.maxSpeed;
+                    this.velocity.y = (this.velocity.y / speed) * this.maxSpeed;
+                }
+
+                this.position.x += this.velocity.x;
+                this.position.y += this.velocity.y;
+
+                this.acceleration.x = 0;
+                this.acceleration.y = 0;
+            }
+
+            applyForce(force) {
+                this.acceleration.x += force.x;
+                this.acceleration.y += force.y;
+            }
+
+            align(boids) {
+                let perceptionRadius = 50;
+                let steering = { x: 0, y: 0 };
+                let total = 0;
+
+                for (let other of boids) {
+                    let distance = Math.hypot(
+                        other.position.x - this.position.x,
+                        other.position.y - this.position.y
+                    );
+
+                    if (other !== this && distance < perceptionRadius) {
+                        steering.x += other.velocity.x;
+                        steering.y += other.velocity.y;
+                        total++;
+                    }
+                }
+
+                if (total > 0) {
+                    steering.x /= total;
+                    steering.y /= total;
+
+                    const magnitude = Math.sqrt(steering.x ** 2 + steering.y ** 2);
+                    if (magnitude > 0) {
+                        steering.x = (steering.x / magnitude) * this.maxSpeed;
+                        steering.y = (steering.y / magnitude) * this.maxSpeed;
+                    }
+
+                    steering.x -= this.velocity.x;
+                    steering.y -= this.velocity.y;
+
+                    const steeringMagnitude = Math.sqrt(steering.x ** 2 + steering.y ** 2);
+                    if (steeringMagnitude > this.maxForce) {
+                        steering.x = (steering.x / steeringMagnitude) * this.maxForce;
+                        steering.y = (steering.y / steeringMagnitude) * this.maxForce;
+                    }
+                }
+
+                return steering;
+            }
+
+            cohesion(boids) {
+                let perceptionRadius = 50;
+                let steering = { x: 0, y: 0 };
+                let total = 0;
+
+                for (let other of boids) {
+                    let distance = Math.hypot(
+                        other.position.x - this.position.x,
+                        other.position.y - this.position.y
+                    );
+
+                    if (other !== this && distance < perceptionRadius) {
+                        steering.x += other.position.x;
+                        steering.y += other.position.y;
+                        total++;
+                    }
+                }
+
+                if (total > 0) {
+                    steering.x /= total;
+                    steering.y /= total;
+
+                    steering.x -= this.position.x;
+                    steering.y -= this.position.y;
+
+                    const magnitude = Math.sqrt(steering.x ** 2 + steering.y ** 2);
+                    if (magnitude > 0) {
+                        steering.x = (steering.x / magnitude) * this.maxSpeed;
+                        steering.y = (steering.y / magnitude) * this.maxSpeed;
+                    }
+
+                    steering.x -= this.velocity.x;
+                    steering.y -= this.velocity.y;
+
+                    const steeringMagnitude = Math.sqrt(steering.x ** 2 + steering.y ** 2);
+                    if (steeringMagnitude > this.maxForce) {
+                        steering.x = (steering.x / steeringMagnitude) * this.maxForce;
+                        steering.y = (steering.y / steeringMagnitude) * this.maxForce;
+                    }
+                }
+
+                return steering;
+            }
+
+            separation(boids) {
+                let perceptionRadius = 25;
+                let steering = { x: 0, y: 0 };
+                let total = 0;
+
+                for (let other of boids) {
+                    let distance = Math.hypot(
+                        other.position.x - this.position.x,
+                        other.position.y - this.position.y
+                    );
+
+                    if (other !== this && distance < perceptionRadius) {
+                        let diff = {
+                            x: this.position.x - other.position.x,
+                            y: this.position.y - other.position.y
+                        };
+                        const magnitude = Math.sqrt(diff.x ** 2 + diff.y ** 2);
+                        if (magnitude > 0) {
+                            diff.x /= magnitude;
+                            diff.y /= magnitude;
+                        }
+                        steering.x += diff.x;
+                        steering.y += diff.y;
+                        total++;
+                    }
+                }
+
+                if (total > 0) {
+                    steering.x /= total;
+                    steering.y /= total;
+
+                    const magnitude = Math.sqrt(steering.x ** 2 + steering.y ** 2);
+                    if (magnitude > 0) {
+                        steering.x = (steering.x / magnitude) * this.maxSpeed;
+                        steering.y = (steering.y / magnitude) * this.maxSpeed;
+                    }
+
+                    steering.x -= this.velocity.x;
+                    steering.y -= this.velocity.y;
+
+                    const steeringMagnitude = Math.sqrt(steering.x ** 2 + steering.y ** 2);
+                    if (steeringMagnitude > this.maxForce) {
+                        steering.x = (steering.x / steeringMagnitude) * this.maxForce;
+                        steering.y = (steering.y / steeringMagnitude) * this.maxForce;
+                    }
+                }
+
+                return steering;
+            }
+
+            draw() {
+                ctx.beginPath();
+                ctx.arc(this.position.x, this.position.y, 5, 0, Math.PI * 2); 
+                ctx.fillStyle = '#ACACAC';  
+                ctx.strokeStyle = 'black';
+                ctx.fill();
+                ctx.stroke();
+            }
+        }
+
+        const boids = [];
+        for (let i = 0; i < 200; i++) {
+            boids.push(new Boid(Math.random() * canvas.width, Math.random() * canvas.height));
+        }
+
+        function animate() {
+            ctx.fillStyle = '#1a1a1a'; 
+            ctx.fillRect(0, 0, canvas.width, canvas.height); 
+
+            boids.forEach(boid => {
+                const alignment = boid.align(boids);
+                const cohesion = boid.cohesion(boids);
+                const separation = boid.separation(boids);
+
+                boid.applyForce(alignment);
+                boid.applyForce(cohesion);
+                boid.applyForce(separation);
+
+                boid.update();
+                boid.draw();
+
+                if (boid.position.x > canvas.width) boid.position.x = 0;
+                if (boid.position.x < 0) boid.position.x = canvas.width;
+                if (boid.position.y > canvas.height) boid.position.y = 0;
+                if (boid.position.y < 0) boid.position.y = canvas.height;
+            });
+
+            requestAnimationFrame(animate);
+        }
+
+        animate();
+    </script>
+</body>
+</html>
