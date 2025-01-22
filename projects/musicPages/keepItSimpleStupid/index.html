@@ -16,8 +16,9 @@
         }
         #audioController {
             position: fixed;
-            bottom: 20px;
-            left: 20px;
+            bottom: 20%;
+            left: 40%;
+            z-index: 10; /* Make sure it's on top */
         }
         h1 {
             position: absolute;
@@ -48,6 +49,14 @@
     <canvas id="particleCanvas"></canvas>
     <h1>Keep It Simple Stupid</h1>
     <button onclick="window.location.href='/projects/musicPages/tmp.html'">Back</button>
+
+    <!-- Audio controls -->
+    <div id="audioController">
+        <audio id="backgroundMusic" autoplay loop controls>
+            <source src="/projects/musicPages/keepItSimpleStupid/Keep It Simple Stupid.mp3" type="audio/mp3">
+            Your browser does not support the audio element.
+        </audio>
+    </div>
 
     <script>
         const canvas = document.getElementById('particleCanvas');
