@@ -11,20 +11,25 @@
             overflow: hidden;
             color: white;
         }
-        canvas {
-            display: block;
+        body {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
         }
         #audioController {
-            position: fixed;
-            bottom: 20%;
-            left: 40%;
+
             z-index: 10; /* Make sure it's on top */
         }
-        h1 {
+        .test {
             position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
+            width: 100vw;
+            height: 100vh;
+            z-index: 10;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        h1 {
             font-size: 5rem;
             background-color: #333;
             border-radius: 0.5em;
@@ -32,33 +37,36 @@
             color: #ff7231;
             box-shadow: 0 0 .5em #ff7231;
             text-align: center;
+            margin: 1em;
+            margin-top: 35%;
         }
         button {
-            position: absolute;
-            top: 20px;
-            left: 20px;
             background-color: #333;
             color: #ff7231;
             border: none;
             padding: 0.5em;
             border-radius: 0.5em;
             box-shadow: 0 0 .5em #ff7231;
+            margin: 1em;
         }
     </style>
 </head>
 <body>
     <canvas id="particleCanvas"></canvas>
-    <h1>Keep It Simple Stupid</h1>
-    <button onclick="window.location.href='/projects/musicPages/tmp.html'">Back</button>
+    <div class="test">
+        <h1>Keep It Simple Stupid</h1>
 
-    <!-- Audio controls -->
-    <div id="audioController">
-        <audio id="backgroundMusic" autoplay loop controls>
-            <source src="/projects/musicPages/keepItSimpleStupid/Keep It Simple Stupid.mp3" type="audio/mp3">
-            Your browser does not support the audio element.
-        </audio>
+        <!-- Audio controls -->
+        <div id="audioController">
+            <audio id="backgroundMusic" autoplay loop controls>
+                <source src="/projects/musicPages/keepItSimpleStupid/Keep It Simple Stupid.mp3" type="audio/mp3">
+                Your browser does not support the audio element.
+            </audio>
+        </div>
+
+        <button onclick="window.location.href='/projects/musicPages/tmp.html'">Back</button>
     </div>
-
+    
     <script>
         const canvas = document.getElementById('particleCanvas');
         const ctx = canvas.getContext("2d");
