@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Push-Up Tracker</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f9;
+            color: #333;
+        }
+
+        .container {
+            margin-top: 50px;
+        }
+
+        .counter {
+            font-size: 5rem;
+            margin: 20px 0;
+        }
+
+        button {
+            padding: 10px 20px;
+            font-size: 1.2rem;
+            margin: 10px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            background-color: #007BFF;
+            color: white;
+            transition: background-color 0.3s;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+
+        button:active {
+            transform: scale(0.95);
+        }
+
+        button.reset {
+            background-color: #DC3545;
+        }
+
+        button.reset:hover {
+            background-color: #a71d2a;
+        }
+
+        input {
+            padding: 10px;
+            font-size: 1.2rem;
+            width: 100px;
+            text-align: center;
+            border: 2px solid #ccc;
+            border-radius: 5px;
+            margin: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Push-Up Tracker</h1>
+        <div class="counter" id="pushup-count">0</div>
+        <input type="number" id="pushup-input" placeholder="Enter count" />
+        <button onclick="addPushups()">Add Push-Ups</button>
+        <button class="reset" onclick="resetPushups()">Reset</button>
+    </div>
+
+    <script>
+        let pushupCount = parseInt(localStorage.getItem('pushupCount')) || 0;
+        document.getElementById('pushup-count').textContent = pushupCount;
+
+        function addPushups() {
+            const input = document.getElementById('pushup-input');
+            const value = parseInt(input.value);
+
+            if (!isNaN(value) && value > 0) {
+                pushupCount += value;
+                document.getElementById('pushup-count').textContent = pushupCount;
+                input.value = '';
+                localStorage.setItem('pushupCount', pushupCount);
+            } else {
+                alert('Please enter a valid positive number.');
+            }
+        }
+
+        function resetPushups() {
+            pushupCount = 0;
+            document.getElementById('pushup-count').textContent = pushupCount;
+            document.getElementById('pushup-input').value = '';
+            localStorage.setItem('pushupCount', pushupCount);
+        }
+    </script>
+</body>
+</html>
