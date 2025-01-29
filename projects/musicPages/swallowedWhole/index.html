@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+            color: green;
+        }
+        #canvas {
+            z-index: -1;
+            position: absolute;
+            top: 0;
+            left: 0;
+        }
+        body {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            margin-top: 4rem;
+        }
+        p {
+            padding: 1rem;
+        }
+    </style>
+</head>
+<body>
+    <p>
+        Money tight, feels like air too thin<br>
+        Try to fight, but where do I begin?<br>
+        Standin’ still, but the world keeps turnin’<br>
+        Got a fire, but it’s barely burnin’<br>
+        <br>
+        Every step feel like I might slip through<br>
+        Every dream feel a little less true<br>
+        Maybe I missed the signs, maybe I lost my way<br>
+        Maybe I’m just too tired to say<br>
+    </p>
+    <p>
+        Tryna piece it all together, but the edges fade<br>
+        Tryna climb, but the rungs decay<br>
+        If I fall, do I rise? If I lose, do I stay?<br>
+        Or do I just drift and fade away?<br> 
+    </p>
+    <p>
+        I talk to the sky, but it don’t talk back<br>
+        I follow the path, but the road turns black<br>
+        Every door’s locked, every bridge burned<br>
+        Every lesson feel like one I never learned<br>
+        <br>
+        Maybe I was never meant to know<br>
+        Maybe this is just how it goes<br>
+        Maybe I walk till my feet give in<br>
+        Maybe I stop, let the dark sink in<br>
+    </p>
+    <p>
+        Tryna piece it all together, but the edges fade<br>
+        Tryna climb, but the rungs decay<br>
+        If I fall, do I rise? If I lose, do I stay?<br>
+        Or do I just drift and fade away?<br>
+    </p>
+    <p>
+        Maybe I wake up, maybe I don’t<br>
+        Maybe I stand up, maybe I won’t<br>
+        Maybe I’m stronger than I let myself see<br>
+        Or maybe this weight just swallows me<br>
+    </p>
+    <div id="audioController">
+        <audio id="backgroundMusic" autoplay loop controls>
+            <source src="/projects/" type="audio/mp3">
+            Your browser does not support the audio element.
+        </audio>
+    </div>
+    <canvas id="canvas"></canvas>
+    <script>
+        const canvas = document.getElementById("canvas");
+        const ctx = canvas.getContext("2d");
+
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+
+        const symbols = [];
+        const numSymbols = 100;
+
+        for (let i = 0; i < numSymbols; i++) {
+            symbols.push({
+                x: Math.random() * canvas.width,
+                y: Math.random() * canvas.height,
+                speed: Math.random() * 3 + 1,
+                fontSize: Math.random() * 20 + 10
+            });
+        }
+
+        function draw() {
+            ctx.fillStyle ='black';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            ctx.fillStyle = "green";
+            ctx.font = "20px Arial";
+
+            symbols.forEach(symbol => {
+                ctx.font = `${symbol.fontSize}px Arial`;
+                ctx.fillText("$", symbol.x, symbol.y);
+                symbol.y += symbol.speed;
+
+                if (symbol.y > canvas.height) {
+                    symbol.y = 0;
+                    symbol.x = Math.random() * canvas.width;
+                }
+            });
+            requestAnimationFrame(draw);
+        }
+
+        draw();
+    </script>
+</body>
+</html>
