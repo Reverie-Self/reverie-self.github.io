@@ -27,6 +27,11 @@
         p {
             padding: 1rem;
         }
+        button {
+            background-color: black;
+            box-shadow: 0 5px 15px green;
+            margin: 1rem;
+        }
     </style>
 </head>
 <body>
@@ -72,10 +77,11 @@
     </p>
     <div id="audioController">
         <audio id="backgroundMusic" autoplay loop controls>
-            <source src="/projects/" type="audio/mp3">
+            <source src="/projects/musicPages/swallowedWhole/swallowedWhole.mp3" type="audio/mp3">
             Your browser does not support the audio element.
         </audio>
     </div>
+    <button onclick="window.location.href='/projects/musicPages/tmp.html'">Back</button>
     <canvas id="canvas"></canvas>
     <script>
         const canvas = document.getElementById("canvas");
