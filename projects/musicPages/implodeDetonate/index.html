@@ -8,7 +8,7 @@
         * {
             margin: 0;
             padding: 0;
-            background-color: #111;
+            background-color: #0a0909;
         }
         body {
             display: flex;
@@ -16,16 +16,24 @@
             align-items: center;
         }
         p {
-            margin: 1rem;
+            margin: 2rem;
             text-align: center;
             color: rgb(82, 1, 1);
-            background-color: #444;
+            background-color: #140c0c;
             border-radius: 1rem;
             padding: 0.7rem;
+            font-size: larger;
+            box-shadow: 0 5px 5px rgb(134, 0, 0);
+        }
+        img {
+            margin: 1rem;
+            width: 60%;
+            box-shadow: 0 0 15px rgb(114, 0, 0);
         }
     </style>
 </head>
 <body>
+    <img src="./detonate.webp">
     <p>
         I used to explode—ignite on command<br>
         A flash, a roar, just smoke in their hands<br>
@@ -68,7 +76,7 @@
     
     <div id="audioController">
         <audio id="backgroundMusic" autoplay loop controls>
-            <source src="/projects/musicPages/implodeDetonate/_Implode _ Detonate_.mp3" type="audio/mp3">
+            <source src="./implode.mp3" type="audio/mp3">
             Your browser does not support the audio element.
         </audio>
     </div>
