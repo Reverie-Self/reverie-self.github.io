@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Echoes of Us</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        body {
+            background-color: black;
+            color: white;
+            font-family: Arial, sans-serif;
+            text-align: center;
+        }
+        .echo {
+            opacity: 1;
+            transition: opacity 3s ease-in-out;
+            font-style: italic;
+            display: block;
+            padding: 5px;
+        }
+        .echo.fade {
+            opacity: 0;
+        }
+        .echo:hover {
+            text-shadow: 0 0 10px #fff;
+        }
+        #echoes {
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="hero">
+        <h1>Echoes of Us</h1>
+        <p>An introspective journey through sound and space.</p>
+        <button class="play-button">Play</button>
+    </div>
+    
+    <section class="image-display">
+        <img src="song-image.jpg" alt="Echoes of Us">
+    </section>
+    
+    <section class="lyrics">
+        <p class="verse">Verse 1: ...</p>
+        <p class="verse">Chorus: ...</p>
+        <p class="verse">Verse 2: ...</p>
+    </section>
+    
+    <section class="interactive">
+        <h2>Leave an Echo</h2>
+        <input type="text" id="echo-input" placeholder="Share your thoughts...">
+        <button onclick="leaveEcho()">Send</button>
+        <div id="echoes"></div>
+    </section>
+    
+    <footer>
+        <p>No voice is ever truly lost. We all just want to make it home.</p>
+        <div class="social-links">
+            <a href="#">Share Your Echo</a>
+        </div>
+    </footer>
+    
+    <script>
+        function leaveEcho() {
+            const input = document.getElementById("echo-input");
+            const message = input.value.trim();
+            
+            if (message === "") return;
+
+            const echoContainer = document.getElementById("echoes");
+            const echo = document.createElement("p");
+            echo.classList.add("echo");
+            echo.textContent = message;
+
+            echo.addEventListener("click", () => {
+                echo.style.textShadow = "0 0 15px #fff";
+                setTimeout(() => echo.style.textShadow = "", 1000);
+            });
+
+            echoContainer.appendChild(echo);
+
+            setTimeout(() => echo.classList.add("fade"), 3000);
+            setTimeout(() => echo.remove(), 6000);
+
+            input.value = "";
+        }
+    </script>
+</body>
+</html>

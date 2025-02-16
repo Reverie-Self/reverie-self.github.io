@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>3D Rotating Cube</title>
+    <style>
+        body { margin: 0; display: flex; justify-content: center; align-items: center; height: 100vh; background: black; }
+        canvas { background: black; }
+    </style>
+</head>
+<body>
+    <canvas id="cubeCanvas"></canvas>
+    <script>
+        const canvas = document.getElementById("cubeCanvas");
+        const ctx = canvas.getContext("2d");
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+
+        let angleX = 0;
+        let angleY = 0;
+
+        const vertices = [
+            [-1, -1, -1], [1, -1, -1], [1, 1, -1], [-1, 1, -1],
+            [-1, -1,  1], [1, -1,  1], [1, 1,  1], [-1, 1,  1]
+        ];
+
+        const edges = [
+            [0, 1], [1, 2], [2, 3], [3, 0],
+            [4, 5], [5, 6], [6, 7], [7, 4],
+            [0, 4], [1, 5], [2, 6], [3, 7]
+        ];
+
+        function rotate3D(point, angleX, angleY) {
+            let [x, y, z] = point;
+            let cosX = Math.cos(angleX), sinX = Math.sin(angleX);
+            let cosY = Math.cos(angleY), sinY = Math.sin(angleY);
+            let newY = y * cosX - z * sinX;
+            let newZ = y * sinX + z * cosX;
+            let newX = x * cosY + newZ * sinY;
+            newZ = -x * sinY + newZ * cosY;
+            return [newX, newY, newZ];
+        }
+
+        function project(point) {
+            const [x, y, z] = point;
+            const distance = 5;
+            const scale = 200 / (z + distance);
+            return [x * scale + canvas.width / 2, -y * scale + canvas.height / 2];
+        }
+
+        function drawCube() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            const transformedVertices = vertices.map(v => project(rotate3D(v, angleX, angleY)));
+            ctx.strokeStyle = "white";
+            ctx.beginPath();
+            edges.forEach(([start, end]) => {
+                const [x1, y1] = transformedVertices[start];
+                const [x2, y2] = transformedVertices[end];
+                ctx.moveTo(x1, y1);
+                ctx.lineTo(x2, y2);
+            });
+            ctx.stroke();
+        }
+
+        function animate() {
+            angleX += 0.02;
+            angleY += 0.03;
+            drawCube();
+            requestAnimationFrame(animate);
+        }
+
+        animate();
+    </script>
+</body>
+</html>

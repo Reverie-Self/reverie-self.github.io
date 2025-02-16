@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Small Orange Circle Guy</title>
+    <style>
+        body {
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #222;
+        }
+        canvas {
+            background-color: transparent;
+        }
+    </style>
+</head>
+<body>
+    <canvas id="circleCanvas"></canvas>
+    <script>
+        const canvas = document.getElementById("circleCanvas");
+        const ctx = canvas.getContext("2d");
+        canvas.width = 400;
+        canvas.height = 400;
+
+        let time = 0;
+        function drawCircleGuy() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            
+            ctx.fillStyle = "#FFA500";
+            ctx.beginPath();
+            let centerY = 200 + Math.sin(time) * 10;
+            ctx.arc(200, centerY, 30, 0, Math.PI * 2);
+            ctx.fill();
+
+            // Eyes
+            ctx.fillStyle = "#000";
+            ctx.beginPath();
+            ctx.arc(190, centerY - 10, 5, 0, Math.PI * 2);
+            ctx.arc(210, centerY - 10, 5, 0, Math.PI * 2);
+            ctx.fill();
+            
+            time += 0.1;
+            requestAnimationFrame(drawCircleGuy);
+        }
+
+        drawCircleGuy();
+    </script>
+</body>
+</html>
