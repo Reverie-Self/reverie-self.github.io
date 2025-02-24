@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Song Lyrics Sync</title>
+    <style>
+        body { font-family: Arial, sans-serif; text-align: center; }
+        #lyrics-container { margin-top: 20px; }
+        .lyric { display: none; font-size: 20px; margin: 10px; }
+        .active { display: block; font-weight: bold; color: blue; }
+    </style>
+</head>
+<body>
+    <audio id="song" src="./WhereDoIBegin.mp3" preload="auto"></audio>
+    <button onclick="startPlayback()">Play Song</button>
+    <h1>Now Playing: Your Song</h1>
+    <div id="lyrics-container"></div>
+    
+    <script>
+        const song = document.getElementById("song");
+        const lyricsContainer = document.getElementById("lyrics-container");
+
+        // Sample lyrics with timestamps and durations (in seconds)
+        const lyrics = [
+            { time: 12, duration: 5, text: "First line of lyrics" },
+            { time: 19, duration: 5, text: "Second line of lyrics" },
+            { time: 25, duration: 5, text: "Third line of lyrics" },
+            { time: 31, duration: 5, text: "Fourth line of lyrics" },
+            { time: 38, duration: 5, text: "Fifth line of lyrics" },
+            { time: 42, duration: 5, text: "Second line of lyrics" },
+            { time: 56, duration: 5, text: "Third line of lyrics" },
+            { time: 61, duration: 4, text: "Fourth line of lyrics" }
+        ];
+
+        function startPlayback() {
+            song.play().catch(error => console.log("Autoplay blocked:", error));
+            displayLyrics();
+        }
+
+        function displayLyrics() {
+            lyrics.forEach(({ time, duration, text }) => {
+                setTimeout(() => {
+                    let lyricDiv = document.createElement("div");
+                    lyricDiv.classList.add("lyric", "active");
+                    lyricDiv.textContent = text;
+                    lyricsContainer.appendChild(lyricDiv);
+
+                    setTimeout(() => {
+                        lyricDiv.classList.remove("active");
+                        lyricDiv.remove();
+                    }, duration * 1000);
+                }, time * 1000);
+            });
+        }
+    </script>
+</body>
+</html>
