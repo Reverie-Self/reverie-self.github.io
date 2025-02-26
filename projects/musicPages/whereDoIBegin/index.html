@@ -5,36 +5,40 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Song Lyrics Sync</title>
     <style>
-        body { font-family: Arial, sans-serif; text-align: center; }
-        #lyrics-container { margin-top: 20px; }
-        .lyric { display: none; font-size: 20px; margin: 10px; }
-        .active { display: block; font-weight: bold; color: blue; }
+        body { font-family: Arial, sans-serif; text-align: center; margin: 0; overflow: hidden; }
+        canvas { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: -1; }
+        #lyrics-container { margin-top: 20px; position: relative; }
+        .lyric { display: none; font-size: 20px; margin: 10px; transition: color 0.5s ease-in-out; }
+        .active { display: block; font-weight: bold; }
     </style>
 </head>
 <body>
+    <canvas id="visualizer"></canvas>
     <audio id="song" src="./WhereDoIBegin.mp3" preload="auto"></audio>
     <button onclick="startPlayback()">Play Song</button>
-    <h1>Now Playing: Your Song</h1>
     <div id="lyrics-container"></div>
     
     <script>
         const song = document.getElementById("song");
         const lyricsContainer = document.getElementById("lyrics-container");
+        const canvas = document.getElementById("visualizer");
+        const ctx = canvas.getContext("2d");
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
 
         // Sample lyrics with timestamps and durations (in seconds)
         const lyrics = [
-            { time: 12, duration: 5, text: "First line of lyrics" },
-            { time: 19, duration: 5, text: "Second line of lyrics" },
-            { time: 25, duration: 5, text: "Third line of lyrics" },
-            { time: 31, duration: 5, text: "Fourth line of lyrics" },
-            { time: 38, duration: 5, text: "Fifth line of lyrics" },
-            { time: 42, duration: 5, text: "Second line of lyrics" },
-            { time: 56, duration: 5, text: "Third line of lyrics" },
-            { time: 61, duration: 4, text: "Fourth line of lyrics" }
+            { time: 3, duration: 4, text: "First line of lyrics" },
+            { time: 8, duration: 3, text: "Second line of lyrics" },
+            { time: 12, duration: 5, text: "Third line of lyrics" },
+            { time: 18, duration: 4, text: "Fourth line of lyrics" }
         ];
+
+        let analyser, dataArray;
 
         function startPlayback() {
             song.play().catch(error => console.log("Autoplay blocked:", error));
+            setupVisualizer();
             displayLyrics();
         }
 
@@ -45,13 +49,48 @@
                     lyricDiv.classList.add("lyric", "active");
                     lyricDiv.textContent = text;
                     lyricsContainer.appendChild(lyricDiv);
-
+                    
+                    const colorChange = setInterval(() => {
+                        if (dataArray) {
+                            let avgFrequency = dataArray.reduce((a, b) => a + b, 0) / dataArray.length;
+                            lyricDiv.style.color = `rgb(${avgFrequency + 100}, 50, 150)`;
+                        }
+                    }, 500);
+                    
                     setTimeout(() => {
+                        clearInterval(colorChange);
                         lyricDiv.classList.remove("active");
                         lyricDiv.remove();
                     }, duration * 1000);
                 }, time * 1000);
             });
+        }
+
+        function setupVisualizer() {
+            const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+            analyser = audioContext.createAnalyser();
+            const source = audioContext.createMediaElementSource(song);
+            source.connect(analyser);
+            analyser.connect(audioContext.destination);
+            analyser.fftSize = 256;
+            const bufferLength = analyser.frequencyBinCount;
+            dataArray = new Uint8Array(bufferLength);
+
+            function drawVisualizer() {
+                requestAnimationFrame(drawVisualizer);
+                analyser.getByteFrequencyData(dataArray);
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                const barWidth = (canvas.width / bufferLength) * 2.5;
+                let barHeight;
+                let x = 0;
+                for (let i = 0; i < bufferLength; i++) {
+                    barHeight = dataArray[i];
+                    ctx.fillStyle = `rgb(${barHeight + 100}, 50, 150)`;
+                    ctx.fillRect(x, canvas.height - barHeight, barWidth, barHeight);
+                    x += barWidth + 2;
+                }
+            }
+            drawVisualizer();
         }
     </script>
 </body>
